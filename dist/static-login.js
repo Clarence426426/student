@@ -1,4 +1,5 @@
 (() => {
+  if (!location.hostname.endsWith('github.io')) return;
   const originalFetch = window.fetch.bind(window);
   const demoProfile = { familyId: 'demo', nickname: '小小冒險者', grade: 3, birthYear: 2017, parentName: '家長' };
   const json = (body) => new Response(JSON.stringify(body), { status: 200, headers: { 'Content-Type': 'application/json' } });
