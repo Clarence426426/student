@@ -1,2 +1,18 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#263d35"><meta name="description" content="你的每一分努力，都會讓冒險向前。日式繪本風溫習冒險。"><title>星光冒險 · Starlight Chronicle</title><link rel="stylesheet" href="style.css"></head><body><div id="app"></div><div id="toast" role="status"></div><script src="currency.js"></script><script src="app.js"></script><script src="features.js"></script><script src="dialogue.js"></script><script src="personalization.js"></script><script src="world.js"></script><script src="registration.js"></script><script src="room-environment.js"></script><script src="adventure.js"></script><script src="calendar-rest.js"></script><script src="hero-sprites.js"></script><script src="static-login.js"></script></body></html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#263d35"><meta name="description" content="你的每一分努力，都會讓冒險向前。日式繪本風溫習冒險。"><title>星光冒險 · Starlight Chronicle</title><link rel="stylesheet" href="style.css"></head><body><div id="app"></div><div id="toast" role="status"></div><script src="currency.js"></script><script src="app.js"></script><script src="features.js"></script><script src="dialogue.js"></script><script src="personalization.js"></script><script src="world.js"></script><script src="registration.js"></script><script src="room-environment.js"></script><script src="adventure.js"></script><script src="calendar-rest.js"></script><script src="hero-sprites.js"></script><script>
+(() => {
+  const originalFetch = window.fetch.bind(window);
+  const demoProfile = { familyId: 'demo', nickname: '小小冒險者', grade: 3, birthYear: 2017, parentName: '家長' };
+  const json = (body) => new Response(JSON.stringify(body), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  window.fetch = async (input, options = {}) => {
+    const url = typeof input === 'string' ? input : input.url;
+    if (!url.includes('/api/')) return originalFetch(input, options);
+    let body = {};
+    try { body = options.body ? JSON.parse(options.body) : {}; } catch {}
+    if (url.endsWith('/api/parent/login') && body.username === 'admin' && body.password === 'admin') return json({ profile: demoProfile });
+    if (url.endsWith('/api/child/login') && body.username === 'test' && body.password === 'test') return json({ profile: demoProfile });
+    if (url.endsWith('/api/parent/logout')) return json({});
+    return new Response(JSON.stringify({ error: '公開示範版只支援 admin/admin 及 test/test 登入。' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
+  };
+})();
+</script></body></html>
