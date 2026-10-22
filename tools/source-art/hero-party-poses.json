@@ -1,0 +1,9 @@
+{
+  "image": "hero-party-poses.png",
+  "width": 1536,
+  "height": 1024,
+  "columns": 6,
+  "rows": 6,
+  "heroRowOrder": ["knight", "mage", "scholar", "ranger", "healer", "explorer"],
+  "poseColumnOrder": ["idle", "defend", "attack", "cast", "victory", "rest"]
+}
