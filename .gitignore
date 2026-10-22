@@ -1,0 +1,6 @@
+
+local-data/
+.openai/
+node_modules/
+.DS_Store
+*_Conflict.png
