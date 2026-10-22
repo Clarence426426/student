@@ -1,0 +1,14 @@
+{
+  "layout": "one transparent horizontal sprite sheet per hero",
+  "sheetWidth": 3200,
+  "sheetHeight": 360,
+  "columns": 10,
+  "frameWidth": 320,
+  "frameOrder": ["walk", "eat", "sleep", "read", "attack", "magic", "shield", "sit", "play", "win"],
+  "heroes": [
+    {"id": "knight", "image": "hero-knight-ten-poses.png"},
+    {"id": "mage", "image": "hero-mage-ten-poses.png"},
+    {"id": "scholar", "image": "hero-scholar-ten-poses.png"},
+    {"id": "ranger", "image": "hero-ranger-ten-poses.png"}
+  ]
+}
