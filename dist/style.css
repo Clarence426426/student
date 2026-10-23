@@ -47,3 +47,9 @@
 /* Level-up action sheets: preserve the upgraded outfit in home, rest and battle scenes. */
 .upgrade-scene-hero{background-color:transparent!important;filter:drop-shadow(0 5px 3px #263d3544)}
 .room .upgrade-scene-hero{width:100%;height:100%}
+
+/* Mission-specific time of day overlays. */
+.expedition[data-time="dusk"]{background-color:#d48658;background-blend-mode:soft-light}
+.expedition[data-time="dusk"]:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffb46950,transparent 58%,#9a4d3030);z-index:1}
+.expedition[data-time="night"]:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 76% 18%,#fff8c955 0 2px,transparent 3px),radial-gradient(circle at 48% 25%,#fff8c944 0 1px,transparent 2px),linear-gradient(180deg,#18284c48,transparent 65%);z-index:1}
+.expedition .exp-title,.expedition .exp-hero,.expedition .exp-monster,.expedition .exp-strike,.expedition .exp-battle-note,.expedition .exp-distance{z-index:5}
