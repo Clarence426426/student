@@ -2,7 +2,7 @@
 // Keeps the browser responsive while mirroring one family's game state to the server.
 // The server is the source of truth after every successful login.
 (() => {
-  if (location.hostname.endsWith('github.io')) return;
+  if (location.hostname.endsWith('github.io')||location.protocol==='file:') return;
   const browserPersist=persist;
   let saveTimer=null,hydrating=false;
   const normalise=()=>{migrateCrystalCurrency(data);upgradeSave();if(data.hero!==null&&(!Number.isInteger(data.hero)||data.hero<0||data.hero>=heroes.length))data.hero=0;chosen=data.hero??0};
