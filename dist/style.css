@@ -57,3 +57,8 @@
 
 /* Each weather is baked into a dedicated hand-painted scene: no colour or particle overlay. */
 .expedition[data-weather],.expedition[data-time]{background-color:transparent!important;background-blend-mode:normal!important}.expedition[data-time="dusk"]:after,.expedition[data-time="night"]:after{display:none!important}.expedition .exp-weather{display:none!important}
+.victory-state .exp-hero{filter:drop-shadow(0 0 14px #fff0a8) drop-shadow(0 5px 2px #334b4333)}
+.victory-state .exp-monster{opacity:0!important}
+.victory-card{margin:18px 0 2px;padding:18px;text-align:center;border:1px solid #d8b668;border-radius:10px;background:radial-gradient(circle at 50% 0,#fff8d6,#f2e6c9);box-shadow:inset 0 0 0 4px #ffffff75}
+.victory-card h3{font-size:25px;color:#465b43;margin:3px 0 8px}.victory-card p{font-size:13px;color:#6f715f}.victory-kicker{font:10px Georgia,serif!important;letter-spacing:3px;color:#a17c37!important}.victory-card small{display:block;color:#85795f;line-height:1.7;margin:10px auto 14px;max-width:390px}.victory-card .primary{min-width:190px}
+.victory-rewards{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:13px 0}.victory-rewards span{background:#fff8e4;border:1px solid #d9bf80;border-radius:20px;padding:6px 10px;color:#576348;font-size:12px;font-weight:700}
