@@ -33,7 +33,7 @@ function accountStore(file){
    return profile(row);
   },
   async getState(familyId){const row=db.prepare('SELECT state_json FROM families WHERE id=?').get(familyId);if(!row||!row.state_json)return null;try{return JSON.parse(row.state_json)}catch{return null}},
-  async saveState(familyId,state){const json=serialiseState(state);const result=db.prepare('UPDATE families SET state_json=? WHERE id=?').run(json,familyId);if(!result.changes)throw Error('找不到家庭帳戶。');return JSON.parse(json)}
+  async saveState(familyId,state){const json=serialiseState(state);let result=db.prepare('UPDATE families SET state_json=? WHERE id=?').run(json,familyId);if(!result.changes&&familyId==='demo'){const parent=hash(randomBytes(24).toString('hex')),child=hash(randomBytes(24).toString('hex'));db.prepare('INSERT OR IGNORE INTO families (id,username,child_username,parent_name,nickname,grade,birth_year,parent_salt,parent_hash,child_salt,child_hash,state_json,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)').run('demo','__demo_parent','__demo_child','家長','小小冒險者',3,2017,parent.salt,parent.hash,child.salt,child.hash,json,new Date().toISOString());result=db.prepare('UPDATE families SET state_json=? WHERE id=?').run(json,familyId)}if(!result.changes)throw Error('找不到家庭帳戶。');return JSON.parse(json)}
  };
 }
 

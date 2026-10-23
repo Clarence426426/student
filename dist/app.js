@@ -4,7 +4,7 @@ const icons={star:'M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z',book:'M12 5v16M12
 function icon(n){return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${icons[n]||icons.star}"/></svg>`}
 const heroes=[{name:'森之劍士',en:'FOREST KNIGHT',desc:'帶住勇氣出發，每一小步都值得驕傲。',gear:'初心者之劍',color:'森綠披風'},{name:'星語魔法師',en:'STAR MAGE',desc:'好奇心就係你最強大嘅魔法。',gear:'星光法杖',color:'星語魔法帽'},{name:'月光學者',en:'MOON SCHOLAR',desc:'每翻開一頁，都會發現新世界。',gear:'月光筆記',color:'學者長袍'},{name:'翠葉遊俠',en:'LEAF RANGER',desc:'專注眼前嘅目標，慢慢就會到達。',gear:'翠葉短弓',color:'森林斗篷'},];
 const KEY='starlight-study-v1';
-function initial(){return {hero:null,nickname:'小小冒險者',xp:0,crystals:0,chests:0,treasures:[],equipped:null,totalMinutes:0,quests:[{id:'q1',title:'森林文字結界',detail:'中文 · 重溫第六課默書詞語',minutes:15,xp:30,subject:'中文',date:today(),done:false},{id:'q2',title:'魔法數字的秘密',detail:'數學 · 完成乘數練習',minutes:20,xp:40,subject:'數學',date:today(),done:false},{id:'q3',title:'古代語言碎片',detail:'英文 · 串讀 Unit 3 生字',minutes:10,xp:25,subject:'英文',date:today(),done:false}],events:[]}}
+function initial(){return {hero:0,nickname:'小小冒險者',xp:0,crystals:0,chests:0,treasures:[],equipped:null,totalMinutes:0,quests:[{id:'q1',title:'森林文字結界',detail:'中文 · 重溫第六課默書詞語',minutes:15,xp:30,subject:'中文',date:today(),done:false},{id:'q2',title:'魔法數字的秘密',detail:'數學 · 完成乘數練習',minutes:20,xp:40,subject:'數學',date:today(),done:false},{id:'q3',title:'古代語言碎片',detail:'英文 · 串讀 Unit 3 生字',minutes:10,xp:25,subject:'英文',date:today(),done:false}],events:[]}}
 function today(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Hong_Kong',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}
 let data;try{data=JSON.parse(localStorage.getItem(KEY))||initial()}catch{data=initial()}
 migrateCrystalCurrency(data);
