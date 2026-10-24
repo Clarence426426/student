@@ -1,3 +1,3 @@
-// Paste the OAuth 2.0 Web Client ID from Google Cloud Console here.
-// This ID is public. Do not put a Google client secret in this web app.
-window.STARLIGHT_GOOGLE_CLIENT_ID = '';
+// Google OAuth web client ID for Starlight Chronicle.
+// This ID is public; the client secret remains only in Google Cloud Console.
+window.STARLIGHT_GOOGLE_CLIENT_ID = '1021438786878-u8pfrgk25nhid7bvpn8fl2060cglsjhi.apps.googleusercontent.com';
