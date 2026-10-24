@@ -121,3 +121,7 @@
 ## 四位勇者的靜態姿勢圖集
 
 角色選擇提供四位全新男性勇者：森之劍士、星語魔法師、月光學者、翠葉遊俠。每位只有一張正式使用的透明橫向圖集，十個獨立格依序為 walk、eat、sleep、read、attack、magic、shield、sit、play、win。每格左右保留透明空位，不會露出鄰格圖像。小屋內角色以固定步行姿勢移動，到達位置才換姿勢；專注任務中依序行走、戰鬥、再行走。角色本身不再逐格播放步行或變形動畫。圖集資料見 `dist/assets/hero-sprites.json`，來源插畫與重建程式在 `tools/source-art/`、`tools/build-pose-sheets.py`。
+
+## Google Drive 雲端存檔
+
+登入頁可使用 Google 帳戶登入，並把每個使用者的遊戲存檔儲存到該帳戶的私人 Google Drive `appDataFolder`。實作及 Google Cloud Console 設定步驟見 [GOOGLE_DRIVE_SETUP.md](GOOGLE_DRIVE_SETUP.md)。公開版本必須先在 `dist/google-drive-config.js` 填入 OAuth Web Client ID；此 Client ID 可公開，但不可放入 Client Secret。
