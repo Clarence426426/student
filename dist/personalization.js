@@ -97,7 +97,8 @@ document.addEventListener('click',async e=>{const b=e.target.closest('button');i
  if(b.dataset.studentTarget&&sessionRole==='child'){const boss=data.bosses.find(v=>v.id===b.dataset.studentTarget);if(boss)openModal('student-target',`<h3>${esc(boss.name)}</h3><form id="student-boss-target-form" data-id="${boss.id}"><label class="field" for="my-boss-target">我希望考幾多分？</label><input class="input" type="number" id="my-boss-target" name="target" min="0" max="100" value="${boss.studentTarget??70}" required><p class="subtle">你嘅個人目標會畀家長睇到，正式獎勵由家長安排。</p><button class="primary" type="submit" style="margin-top:20px">記錄我的目標</button></form>`,'我的考試目標');return}
  if(b.dataset.editTrial&&sessionRole==='parent'){const boss=data.bosses.find(v=>v.id===b.dataset.editTrial);if(!boss||boss.defeated)return;openModal('trial-edit',`<h3>${esc(boss.name)}</h3><form id="edit-trial-form" data-id="${boss.id}"><div class="form-grid">${[['threshold','所需累積 EXP',boss.threshold],['minQuests','最低完成任務數',boss.minQuests||0],['targetScore','目標分數',boss.targetScore??70],['rewardXP','完成考試 EXP',boss.rewardXP||0],['reward','完成考試水晶',boss.reward],['bonusXP','達標額外 EXP',boss.bonusXP||0],['bonusCrystals','達標額外水晶',boss.bonusCrystals||0]].map(([k,label,value])=>`<div><label class="field" for="trial-edit-${k}">${label}</label><input class="input" name="${k}" id="trial-edit-${k}" type="number" min="${k==='threshold'?1:0}" max="${k==='targetScore'?100:1000000}" value="${value}" required></div>`).join('')}</div><label class="field" for="trial-edit-achievement">達標成就</label><input class="input" name="achievement" id="trial-edit-achievement" value="${esc(boss.achievement||'')}" maxlength="60"><button class="primary" type="submit" style="margin-top:20px">儲存 Boss 設定</button></form>`,'調整 Boss 試煉');return}
 },true);
-// The hero glides between room locations while holding one static pose at a time.
+// The hero walks for about 80% of each room cycle, then pauses briefly for a
+// storybook pose.  The Level 1 walk sheet supplies the in-between leg frames.
 let actorMotion=null, actorPoseTimer=null;
 startRoomAnimation=function(){
  clearTimeout(actorMotion);clearTimeout(actorPoseTimer);
@@ -120,7 +121,7 @@ startRoomAnimation=function(){
    if(!document.contains(actor)||modal)return;
    actor.className=`room-actor grounded storybook-actor ${stop.action}${facing}`;
    showRoomDialogue($('#actor-bubble'));
-  },reduce?0:5700);
+  },reduce?0:7600);
   actorMotion=setTimeout(cycle,9500);
  }
  actorMotion=setTimeout(cycle,100);

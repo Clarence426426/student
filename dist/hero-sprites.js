@@ -2,8 +2,14 @@
 
 // One non-animated, ten-pose horizontal sheet for each selectable hero.
 const heroNames = ['knight', 'mage', 'scholar', 'ranger'];
-const spriteVersion = '5';
+const spriteVersion = '6';
 const poseColumns = {walk:0, eat:1, sleep:2, read:3, attack:4, magic:5, shield:6, sit:7, play:8, win:9};
+// Level 1 has a dedicated eight-frame walk cycle.  The artwork is normalised to
+// equally sized cells with wide transparent gutters, so a frame can never bleed
+// into the next one when it is shown in a small game viewport.
+const levelOneWalkSheet = new Image();
+levelOneWalkSheet.onload = updateHeroSprites;
+levelOneWalkSheet.src = `assets/hero-level-1-walk-8frames.png?v=${spriteVersion}`;
 const spriteSheets = heroNames.map(name => {
   const image = new Image();
   image.onload = updateHeroSprites;
@@ -21,8 +27,24 @@ function spriteStyle(image, columns, frame, width, height) {
   };
 }
 
+function paintSmoothLevelOneWalk(el) {
+  if (!levelOneWalkSheet.complete || !levelOneWalkSheet.naturalWidth || !el.clientWidth || !el.clientHeight) return false;
+  const frame = Math.floor(performance.now() / 82) % 8;
+  const style = spriteStyle(levelOneWalkSheet, 8, frame, el.clientWidth, el.clientHeight);
+  el.classList.add('painted-sprite-ready', 'smooth-walk-ready');
+  el.style.setProperty('background-image', `url('assets/hero-level-1-walk-8frames.png?v=${spriteVersion}')`, 'important');
+  el.style.setProperty('background-size', style.size, 'important');
+  el.style.setProperty('background-position', style.position, 'important');
+  el.style.setProperty('transform', el.closest?.('.room-actor')?.classList.contains('facing-left') ? 'scaleX(-1)' : 'none', 'important');
+  el.style.setProperty('animation', 'none', 'important');
+  el.dataset.smoothWalk = 'true';
+  return true;
+}
+
 function paintHeroSprite(el, hero, action) {
   hero = Math.max(0, Math.min(heroNames.length - 1, Number(hero) || 0));
+  const isAnimatedSceneHero = el.closest?.('.room-actor') || el.classList.contains('exp-hero');
+  if (hero === 0 && action === 'walk' && isAnimatedSceneHero && paintSmoothLevelOneWalk(el)) return;
   const image = spriteSheets[hero];
   if (!image.complete || !image.naturalWidth || !el.clientWidth || !el.clientHeight) return;
   const frame = poseColumns[action] ?? poseColumns.walk;
@@ -33,6 +55,7 @@ function paintHeroSprite(el, hero, action) {
   el.style.setProperty('background-position', style.position, 'important');
   el.style.setProperty('transform', el.closest?.('.room-actor')?.classList.contains('facing-left') ? 'scaleX(-1)' : 'none', 'important');
   el.style.setProperty('animation', 'none', 'important');
+  delete el.dataset.smoothWalk;
   el.dataset.spriteAction = action;
 }
 
@@ -67,6 +90,14 @@ function updateHeroSprites() {
   document.querySelectorAll('[data-party-hero]:not(.actor-sprite):not(.exp-hero):not(.rest-sleeper)').forEach(el =>
     paintHeroSprite(el, Number(el.dataset.partyHero), 'walk'));
 }
+
+// Repaint only active walking sprites at animation-frame speed.  Other poses
+// remain still, while walking stays fluid during both home movement and quests.
+function animateSmoothWalkFrames() {
+  document.querySelectorAll('[data-smooth-walk="true"]').forEach(el => paintSmoothLevelOneWalk(el));
+  requestAnimationFrame(animateSmoothWalkFrames);
+}
+requestAnimationFrame(animateSmoothWalkFrames);
 
 portrait = function (i, cls = 'portrait') {
   const hero = Math.max(0, Math.min(heroNames.length - 1, Number(i) || 0));
