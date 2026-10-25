@@ -2,7 +2,7 @@
 
 // One non-animated, ten-pose horizontal sheet for each selectable hero.
 const heroNames = ['knight', 'mage', 'scholar', 'ranger'];
-const spriteVersion = '6';
+const spriteVersion = '7';
 const poseColumns = {walk:0, eat:1, sleep:2, read:3, attack:4, magic:5, shield:6, sit:7, play:8, win:9};
 // Level 1 has a dedicated eight-frame walk cycle.  The artwork is normalised to
 // equally sized cells with wide transparent gutters, so a frame can never bleed
@@ -29,12 +29,13 @@ function spriteStyle(image, columns, frame, width, height) {
 
 function paintSmoothLevelOneWalk(el) {
   if (!levelOneWalkSheet.complete || !levelOneWalkSheet.naturalWidth || !el.clientWidth || !el.clientHeight) return false;
-  const frame = Math.floor(performance.now() / 82) % 8;
-  const style = spriteStyle(levelOneWalkSheet, 8, frame, el.clientWidth, el.clientHeight);
+  // The source sheet has eight square, padded cells.  Making each cell exactly
+  // one viewport wide guarantees adjacent frames never show through.
+  const frame = Math.floor(performance.now() / 110) % 8;
   el.classList.add('painted-sprite-ready', 'smooth-walk-ready');
   el.style.setProperty('background-image', `url('assets/hero-level-1-walk-8frames.png?v=${spriteVersion}')`, 'important');
-  el.style.setProperty('background-size', style.size, 'important');
-  el.style.setProperty('background-position', style.position, 'important');
+  el.style.setProperty('background-size', '800% 100%', 'important');
+  el.style.setProperty('background-position', `${(frame / 7) * 100}% 0%`, 'important');
   el.style.setProperty('transform', el.closest?.('.room-actor')?.classList.contains('facing-left') ? 'scaleX(-1)' : 'none', 'important');
   el.style.setProperty('animation', 'none', 'important');
   el.dataset.smoothWalk = 'true';
