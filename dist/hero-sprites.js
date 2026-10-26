@@ -2,7 +2,7 @@
 
 // One non-animated, ten-pose horizontal sheet for each selectable hero.
 const heroNames = ['knight', 'mage', 'scholar', 'ranger'];
-const spriteVersion = '13';
+const spriteVersion = '14';
 const poseColumns = {walk:0, eat:1, sleep:2, read:3, attack:4, magic:5, shield:6, sit:7, play:8, win:9};
 // Level 1 has a dedicated eight-frame walk cycle.  The artwork is normalised to
 // equally sized cells with wide transparent gutters, so a frame can never bleed
@@ -16,14 +16,14 @@ const spriteSheets = heroNames.map(name => {
   image.src = `assets/hero-${name}-ten-poses.png?v=${spriteVersion}`;
   return image;
 });
-// Each cottage activity has its own eight-frame horizontal sheet. Keeping the
+// Each cottage activity has its own twenty-frame horizontal sheet. Keeping the
 // actions separate makes the frame timing predictable and prevents unrelated
 // poses from ever appearing during a loop.
 const homeActionImages = {};
 ['reading', 'eating', 'sleeping', 'sitting', 'practicing', 'greeting'].forEach(action => {
   const image = new Image();
   image.onload = updateHeroSprites;
-  image.src = `assets/home-actions/${action}-8frames.png?v=${spriteVersion}`;
+  image.src = `assets/home-actions/${action}-20frames.png?v=${spriteVersion}`;
   homeActionImages[action] = image;
 });
 
@@ -67,7 +67,9 @@ function paintHomeActionFrame(el, action) {
   // prevents the level-up renderer from briefly (or permanently) falling back
   // to the legacy ten-pose artwork.
   if (!image || !el.clientWidth || !el.clientHeight) return false;
-  const frame = Math.floor(performance.now() / 155) % 8;
+  // Twenty distinct shots at 250ms each make one complete five-second loop.
+  const frame20 = Math.floor(performance.now() / 250) % 20;
+  const frame = frame20;
   const src = `assets/home-action-frames/${action}/${String(frame).padStart(2,'0')}.png?v=${spriteVersion}`;
   let imageEl = el.querySelector(':scope > img[data-home-action-frame]');
   if (!imageEl || imageEl.dataset.homeActionFrame !== `${action}-${frame}`) {
