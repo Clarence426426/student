@@ -77,6 +77,9 @@ function paintHomeActionFrame(el, action) {
   delete el.dataset.smoothWalk;
   return true;
 }
+// Expose the cottage renderer so the level-up renderer cannot replace it with
+// the legacy ten-pose sheet.
+window.paintHomeActionFrame = paintHomeActionFrame;
 
 
 function paintHeroSprite(el, hero, action) {

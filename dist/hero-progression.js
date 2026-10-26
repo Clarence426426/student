@@ -46,7 +46,9 @@
     document.querySelectorAll('.room-actor .actor-sprite').forEach(el=>{
       const action=roomSpriteAction(el.closest('.room-actor'));
       const homeAction={eat:'eating',read:'reading',sleep:'sleeping',sit:'sitting',play:'practicing',win:'greeting'}[action];
-      if(homeAction&&typeof paintHomeActionFrame==='function'&&paintHomeActionFrame(el,homeAction))return;
+      if(homeAction&&typeof window.paintHomeActionFrame==='function'&&window.paintHomeActionFrame(el,homeAction))return;
+      // Cottage activities never fall back to the legacy ten-pose sheet.
+      if(homeAction)return;
       paintUpgradePose(el,stage,action);
     });
     document.querySelectorAll('.exp-hero').forEach(el=>paintUpgradePose(el,stage,timer?.running?combatSpriteAction(elapsed()):'walk'));
