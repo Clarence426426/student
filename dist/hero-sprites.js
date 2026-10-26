@@ -67,21 +67,22 @@ function paintHomeActionFrame(el, action) {
   // prevents the level-up renderer from briefly (or permanently) falling back
   // to the legacy ten-pose artwork.
   if (!image || !el.clientWidth || !el.clientHeight) return false;
-  clearHomeFrame(el);
   const frame = Math.floor(performance.now() / 155) % 8;
-  const cellWidth = (image.naturalWidth || 2172) / 8;
-  const cellHeight = image.naturalHeight || 724;
-  // Fit the entire portrait cell so the character is never cropped out of the
-  // square cottage viewport. Horizontal gutters are intentional in the sheet.
-  const scale = Math.min(el.clientWidth / cellWidth, el.clientHeight / cellHeight);
-  const style = {
-    size: `${cellWidth * 8 * scale}px ${cellHeight * scale}px`,
-    position: `${(el.clientWidth - cellWidth * scale) / 2 - frame * cellWidth * scale}px ${(el.clientHeight - cellHeight * scale) / 2}px`
-  };
-  el.classList.add('painted-sprite-ready', 'home-action-ready');
-  el.style.setProperty('background-image', `url('assets/home-actions/${action}-8frames.png?v=${spriteVersion}')`, 'important');
-  el.style.setProperty('background-size', style.size, 'important');
-  el.style.setProperty('background-position', style.position, 'important');
+  const src = `assets/home-action-frames/${action}/${String(frame).padStart(2,'0')}.png?v=${spriteVersion}`;
+  let imageEl = el.querySelector(':scope > img[data-home-action-frame]');
+  if (!imageEl || imageEl.dataset.homeActionFrame !== `${action}-${frame}`) {
+    clearHomeFrame(el);
+    imageEl = document.createElement('img');
+    imageEl.dataset.homeActionFrame = `${action}-${frame}`;
+    imageEl.src = src;
+    imageEl.alt = '';
+    imageEl.draggable = false;
+    el.append(imageEl);
+  }
+  el.classList.add('painted-sprite-ready', 'home-action-ready', 'home-frame-ready');
+  el.style.setProperty('background-image', 'none', 'important');
+  el.style.setProperty('background-size', 'auto', 'important');
+  el.style.setProperty('background-position', 'center', 'important');
   el.style.setProperty('transform', 'none', 'important');
   el.style.setProperty('animation', 'none', 'important');
   el.dataset.homeAction = action;
