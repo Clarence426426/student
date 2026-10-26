@@ -46,30 +46,7 @@ function clearHomeFrame(el) {
   el.style.removeProperty('background-position');
 }
 
-function paintHomeWalkFrame(el, frame) {
-  const src = `assets/home-hero-frames/${String(frame).padStart(2, '0')}.png?v=${spriteVersion}`;
-  let image = el.querySelector(':scope > img[data-home-frame]');
-  if (!image || image.dataset.homeFrame !== String(frame)) {
-    el.replaceChildren();
-    image = document.createElement('img');
-    image.dataset.homeFrame = String(frame);
-    image.src = src;
-    image.alt = '';
-    image.draggable = false;
-    el.append(image);
-  }
-  el.classList.add('painted-sprite-ready', 'home-frame-ready', 'home-walk-ready');
-  el.style.setProperty('background-image', 'none', 'important');
-  el.style.setProperty('transform', el.closest?.('.room-actor')?.classList.contains('facing-left') ? 'none' : 'scaleX(-1)', 'important');
-  el.style.setProperty('animation', 'none', 'important');
-  el.dataset.smoothWalk = 'true';
-  return true;
-}
-
 function paintSmoothLevelOneWalk(el) {
-  if (el.closest?.('.room-actor')) {
-    return paintHomeWalkFrame(el, Math.floor(performance.now() / 150) % 8);
-  }
   if (!levelOneWalkSheet.complete || !levelOneWalkSheet.naturalWidth || !el.clientWidth || !el.clientHeight) return false;
   const frame = Math.floor(performance.now() / 110) % 8;
   clearHomeFrame(el);

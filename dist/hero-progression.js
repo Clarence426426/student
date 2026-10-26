@@ -43,7 +43,12 @@
   updateHeroSprites=function(){
     const stage=currentStage();
     if(!stage.image)return spriteUpdater();
-    document.querySelectorAll('.room-actor .actor-sprite').forEach(el=>paintUpgradePose(el,stage,roomSpriteAction(el.closest('.room-actor'))));
+    document.querySelectorAll('.room-actor .actor-sprite').forEach(el=>{
+      const action=roomSpriteAction(el.closest('.room-actor'));
+      const homeAction={eat:'eating',read:'reading',sleep:'sleeping',sit:'sitting',play:'practicing',win:'greeting'}[action];
+      if(homeAction&&typeof paintHomeActionFrame==='function'&&paintHomeActionFrame(el,homeAction))return;
+      paintUpgradePose(el,stage,action);
+    });
     document.querySelectorAll('.exp-hero').forEach(el=>paintUpgradePose(el,stage,timer?.running?combatSpriteAction(elapsed()):'walk'));
     document.querySelectorAll('.rest-sleeper').forEach(el=>paintUpgradePose(el,stage,'sleep'));
   };
