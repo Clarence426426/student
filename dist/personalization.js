@@ -104,12 +104,12 @@ startRoomAnimation=function(){
  clearTimeout(actorMotion);clearTimeout(actorPoseTimer);
  const actor=$('#room-actor');if(!actor)return;
  const moments=[
-  {x:34,y:80,action:'eating',text:'食啲小點心，補充魔力。'},
-  {x:49,y:78,action:'reading',text:'睇多一頁，發現新世界。'},
-  {x:66,y:81,action:'sitting',text:'坐低諗一諗下一步。'},
-  {x:38,y:77,action:'practicing',text:'輕輕練習，保持手感。'},
-  {x:58,y:82,action:'greeting',text:'今日都一齊努力！'},
-  {x:72,y:79,action:'resting',text:'閉目休息，回復精神。'}
+  {x:34,y:80,action:'eating',text:'食啲小點心，補充魔力。',prop:'🍎'},
+  {x:49,y:78,action:'reading',text:'睇多一頁，發現新世界。',prop:'📖'},
+  {x:66,y:81,action:'sitting',text:'坐低諗一諗下一步。',prop:'✦'},
+  {x:38,y:77,action:'practicing',text:'輕輕練習，保持手感。',prop:'⚔'},
+  {x:58,y:82,action:'greeting',text:'今日都一齊努力！',prop:'✦'},
+  {x:72,y:79,action:'resting',text:'閉目休息，回復精神。',prop:'z Z'}
  ];
  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  let index=0;
@@ -119,7 +119,7 @@ startRoomAnimation=function(){
   const moment=moments[index++%moments.length];
   actor.className=`room-actor grounded storybook-actor home-idle ${moment.action}`;
   actor.style.left=moment.x+'%';actor.style.top=moment.y+'%';
-  $('#actor-prop').innerHTML='';
+  $('#actor-prop').innerHTML=`<span class="home-action-prop">${moment.prop}</span>`;
   $('#actor-bubble').textContent=moment.text;
   $('#actor-bubble').classList.add('show');
   // updateHeroSprites runs continuously; this immediate call makes the new pose exact.

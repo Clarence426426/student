@@ -2,7 +2,7 @@
 
 // One non-animated, ten-pose horizontal sheet for each selectable hero.
 const heroNames = ['knight', 'mage', 'scholar', 'ranger'];
-const spriteVersion = '12';
+const spriteVersion = '13';
 const poseColumns = {walk:0, eat:1, sleep:2, read:3, attack:4, magic:5, shield:6, sit:7, play:8, win:9};
 // Level 1 has a dedicated eight-frame walk cycle.  The artwork is normalised to
 // equally sized cells with wide transparent gutters, so a frame can never bleed
@@ -15,6 +15,16 @@ const spriteSheets = heroNames.map(name => {
   image.onload = updateHeroSprites;
   image.src = `assets/hero-${name}-ten-poses.png?v=${spriteVersion}`;
   return image;
+});
+// Each cottage activity has its own eight-frame horizontal sheet. Keeping the
+// actions separate makes the frame timing predictable and prevents unrelated
+// poses from ever appearing during a loop.
+const homeActionImages = {};
+['reading', 'eating', 'sleeping', 'sitting', 'practicing', 'greeting'].forEach(action => {
+  const image = new Image();
+  image.onload = updateHeroSprites;
+  image.src = `assets/home-actions/${action}-8frames.png?v=${spriteVersion}`;
+  homeActionImages[action] = image;
 });
 
 function spriteStyle(image, columns, frame, width, height) {
@@ -74,11 +84,31 @@ function paintSmoothLevelOneWalk(el) {
   return true;
 }
 
+function paintHomeActionFrame(el, action) {
+  const image = homeActionImages[action];
+  if (!image?.complete || !image.naturalWidth || !el.clientWidth || !el.clientHeight) return false;
+  clearHomeFrame(el);
+  const frame = Math.floor(performance.now() / 155) % 8;
+  const style = spriteStyle(image, 8, frame, el.clientWidth, el.clientHeight);
+  el.classList.add('painted-sprite-ready', 'home-action-ready');
+  el.style.setProperty('background-image', `url('assets/home-actions/${action}-8frames.png?v=${spriteVersion}')`, 'important');
+  el.style.setProperty('background-size', style.size, 'important');
+  el.style.setProperty('background-position', style.position, 'important');
+  el.style.setProperty('transform', 'none', 'important');
+  el.style.setProperty('animation', 'none', 'important');
+  el.dataset.homeAction = action;
+  delete el.dataset.smoothWalk;
+  return true;
+}
+
 
 function paintHeroSprite(el, hero, action) {
   hero = Math.max(0, Math.min(heroNames.length - 1, Number(hero) || 0));
   const isAnimatedSceneHero = el.closest?.('.room-actor') || el.classList.contains('exp-hero');
   if (hero === 0 && el.closest?.('.room-actor') && action === 'walk' && paintSmoothLevelOneWalk(el)) return;
+  if (hero === 0 && el.closest?.('.room-actor') && action !== 'walk' && paintHomeActionFrame(el, {
+    eat: 'eating', read: 'reading', sleep: 'sleeping', sit: 'sitting', play: 'practicing', win: 'greeting'
+  }[action])) return;
   if (hero === 0 && action === 'walk' && isAnimatedSceneHero && paintSmoothLevelOneWalk(el)) return;
   clearHomeFrame(el);
   const image = spriteSheets[hero];
