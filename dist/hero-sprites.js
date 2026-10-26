@@ -71,7 +71,9 @@ function paintHomeActionFrame(el, action) {
   const frame = Math.floor(performance.now() / 155) % 8;
   const cellWidth = (image.naturalWidth || 2172) / 8;
   const cellHeight = image.naturalHeight || 724;
-  const scale = Math.max(el.clientWidth / cellWidth, el.clientHeight / cellHeight);
+  // Fit the entire portrait cell so the character is never cropped out of the
+  // square cottage viewport. Horizontal gutters are intentional in the sheet.
+  const scale = Math.min(el.clientWidth / cellWidth, el.clientHeight / cellHeight);
   const style = {
     size: `${cellWidth * 8 * scale}px ${cellHeight * scale}px`,
     position: `${(el.clientWidth - cellWidth * scale) / 2 - frame * cellWidth * scale}px ${(el.clientHeight - cellHeight * scale) / 2}px`
