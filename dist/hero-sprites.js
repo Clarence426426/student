@@ -63,10 +63,19 @@ function paintSmoothLevelOneWalk(el) {
 
 function paintHomeActionFrame(el, action) {
   const image = homeActionImages[action];
-  if (!image?.complete || !image.naturalWidth || !el.clientWidth || !el.clientHeight) return false;
+  // Use the generated sheet's known canvas size while it is loading too. This
+  // prevents the level-up renderer from briefly (or permanently) falling back
+  // to the legacy ten-pose artwork.
+  if (!image || !el.clientWidth || !el.clientHeight) return false;
   clearHomeFrame(el);
   const frame = Math.floor(performance.now() / 155) % 8;
-  const style = spriteStyle(image, 8, frame, el.clientWidth, el.clientHeight);
+  const cellWidth = (image.naturalWidth || 2172) / 8;
+  const cellHeight = image.naturalHeight || 724;
+  const scale = Math.max(el.clientWidth / cellWidth, el.clientHeight / cellHeight);
+  const style = {
+    size: `${cellWidth * 8 * scale}px ${cellHeight * scale}px`,
+    position: `${(el.clientWidth - cellWidth * scale) / 2 - frame * cellWidth * scale}px ${(el.clientHeight - cellHeight * scale) / 2}px`
+  };
   el.classList.add('painted-sprite-ready', 'home-action-ready');
   el.style.setProperty('background-image', `url('assets/home-actions/${action}-8frames.png?v=${spriteVersion}')`, 'important');
   el.style.setProperty('background-size', style.size, 'important');
