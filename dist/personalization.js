@@ -97,33 +97,35 @@ document.addEventListener('click',async e=>{const b=e.target.closest('button');i
  if(b.dataset.studentTarget&&sessionRole==='child'){const boss=data.bosses.find(v=>v.id===b.dataset.studentTarget);if(boss)openModal('student-target',`<h3>${esc(boss.name)}</h3><form id="student-boss-target-form" data-id="${boss.id}"><label class="field" for="my-boss-target">我希望考幾多分？</label><input class="input" type="number" id="my-boss-target" name="target" min="0" max="100" value="${boss.studentTarget??70}" required><p class="subtle">你嘅個人目標會畀家長睇到，正式獎勵由家長安排。</p><button class="primary" type="submit" style="margin-top:20px">記錄我的目標</button></form>`,'我的考試目標');return}
  if(b.dataset.editTrial&&sessionRole==='parent'){const boss=data.bosses.find(v=>v.id===b.dataset.editTrial);if(!boss||boss.defeated)return;openModal('trial-edit',`<h3>${esc(boss.name)}</h3><form id="edit-trial-form" data-id="${boss.id}"><div class="form-grid">${[['threshold','所需累積 EXP',boss.threshold],['minQuests','最低完成任務數',boss.minQuests||0],['targetScore','目標分數',boss.targetScore??70],['rewardXP','完成考試 EXP',boss.rewardXP||0],['reward','完成考試水晶',boss.reward],['bonusXP','達標額外 EXP',boss.bonusXP||0],['bonusCrystals','達標額外水晶',boss.bonusCrystals||0]].map(([k,label,value])=>`<div><label class="field" for="trial-edit-${k}">${label}</label><input class="input" name="${k}" id="trial-edit-${k}" type="number" min="${k==='threshold'?1:0}" max="${k==='targetScore'?100:1000000}" value="${value}" required></div>`).join('')}</div><label class="field" for="trial-edit-achievement">達標成就</label><input class="input" name="achievement" id="trial-edit-achievement" value="${esc(boss.achievement||'')}" maxlength="60"><button class="primary" type="submit" style="margin-top:20px">儲存 Boss 設定</button></form>`,'調整 Boss 試煉');return}
 },true);
-// The hero walks for about 80% of each room cycle, then pauses briefly for a
-// storybook pose.  The Level 1 walk sheet supplies the in-between leg frames.
+// In the cottage the hero stays still and performs a quiet looping activity.
+// Every few seconds he gently reappears at another sensible spot in the room.
 let actorMotion=null, actorPoseTimer=null;
 startRoomAnimation=function(){
  clearTimeout(actorMotion);clearTimeout(actorPoseTimer);
  const actor=$('#room-actor');if(!actor)return;
- const stops=[{x:34,y:78,action:'reading'},{x:63,y:82,action:'eating'},{x:73,y:80,action:'practicing'},{x:41,y:78,action:'sitting'},{x:58,y:83,action:'greeting'},{x:47,y:79,action:'resting'}];
+ const moments=[
+  {x:34,y:80,action:'eating',text:'食啲小點心，補充魔力。'},
+  {x:49,y:78,action:'reading',text:'睇多一頁，發現新世界。'},
+  {x:66,y:81,action:'sitting',text:'坐低諗一諗下一步。'},
+  {x:38,y:77,action:'practicing',text:'輕輕練習，保持手感。'},
+  {x:58,y:82,action:'greeting',text:'今日都一齊努力！'},
+  {x:72,y:79,action:'resting',text:'閉目休息，回復精神。'}
+ ];
  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- let index=0,position={x:51,y:80};
- actor.style.left=position.x+'%';actor.style.top=position.y+'%';
- function cycle(){
+ let index=0;
+ function showMoment(){
   if(!document.contains(actor))return;
-  if(modal){actorMotion=setTimeout(cycle,1500);return}
-  const stop=stops[index++%stops.length];
-  const facing=stop.x<position.x?' facing-left':'';
-  actor.className='room-actor grounded storybook-actor stepping'+facing;
-  actor.style.setProperty('--facing','1');
-  $('#actor-prop').innerHTML='';$('#actor-bubble').classList.remove('show');
-  if(!reduce){actor.style.left=stop.x+'%';actor.style.top=stop.y+'%'}
-  position=stop;
-  actorPoseTimer=setTimeout(()=>{
-   if(!document.contains(actor)||modal)return;
-   actor.className=`room-actor grounded storybook-actor ${stop.action}${facing}`;
-   showRoomDialogue($('#actor-bubble'));
-  },reduce?0:7600);
-  actorMotion=setTimeout(cycle,9500);
+  if(modal){actorMotion=setTimeout(showMoment,1200);return}
+  const moment=moments[index++%moments.length];
+  actor.className=`room-actor grounded storybook-actor home-idle ${moment.action}`;
+  actor.style.left=moment.x+'%';actor.style.top=moment.y+'%';
+  $('#actor-prop').innerHTML='';
+  $('#actor-bubble').textContent=moment.text;
+  $('#actor-bubble').classList.add('show');
+  // updateHeroSprites runs continuously; this immediate call makes the new pose exact.
+  try{updateHeroSprites()}catch{}
+  actorMotion=setTimeout(showMoment,reduce?8000:5600);
  }
- actorMotion=setTimeout(cycle,100);
+ showMoment();
 };
 render();

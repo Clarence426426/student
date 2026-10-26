@@ -38,7 +38,7 @@
 .room .storybook-actor{width:clamp(470px,60vh,650px);height:clamp(470px,60vh,650px);transform:translate(-50%,-86%)}
 @media(max-width:750px){.room .storybook-actor{width:clamp(280px,48vw,410px);height:clamp(280px,48vw,410px)}}
 /* Single-pose hero: only the room position moves; the illustrated figure never animates. */
-.room .storybook-actor{transition:left 5.7s linear,top 5.7s linear!important}
+.room .storybook-actor{transition:left 9.8s linear,top 9.8s linear!important}
 .room .storybook-actor .actor-sprite,.expedition .exp-hero.painted-sprite-ready,.rest-sleeper.painted-sprite-ready{animation:none!important}
 .room .storybook-actor .actor-body,.room .storybook-actor .actor-shadow{animation:none!important}
 @media(prefers-reduced-motion:reduce){.room .storybook-actor{transition:none!important}}
@@ -68,3 +68,27 @@
 .room .h-door{left:57.5%;top:32%;z-index:4}.room .h-calendar{top:20%;z-index:4}
 @media(max-width:650px){.room .h-door{top:40%}.room .h-calendar{top:46%;left:6%}}
 .google-login{margin:18px 0 0;display:grid;gap:9px;text-align:center;color:#8a826b;font-size:10px;line-height:1.7}.google-login>span{display:flex;align-items:center;gap:10px}.google-login>span:before,.google-login>span:after{content:"";height:1px;background:#d8cdb2;flex:1}.google-signin{min-height:47px;border:1px solid #d6c6a3;border-radius:6px;background:#fffaf0;color:#4d584a;font-weight:700;font-size:14px;letter-spacing:.5px}.google-signin b{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:50%;margin-right:9px;background:#4285f4;color:#fff;font-family:Arial}.google-login small{font-size:9px;color:#9b9178}
+
+/* The Level 1 walk sheet is eight square cells; never reveal adjacent cells. */
+.room .storybook-actor .actor-sprite.smooth-walk-ready,.actor-sprite.home-walk-ready{background-repeat:no-repeat!important}.actor-sprite.home-walk-ready{background-size:auto!important}
+
+/* Home motion renders one independent transparent image per frame, never a visible strip. */
+.room .storybook-actor .actor-sprite.home-frame-ready{background-image:none!important;background-size:auto!important;background-position:center!important;overflow:visible}.room .storybook-actor .actor-sprite.home-frame-ready>img{display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom;pointer-events:none}
+
+/* Cottage activity mode: change places, then loop a gentle action without walking. */
+.room .storybook-actor.home-idle{transition:none!important;animation:home-arrive .45s ease-out both}
+.room .storybook-actor.home-idle .actor-sprite{animation:idle-breathe 2.7s ease-in-out infinite!important;transform-origin:50% 92%}
+.room .storybook-actor.home-idle.eating .actor-sprite{animation:idle-eat 1.35s ease-in-out infinite!important}
+.room .storybook-actor.home-idle.reading .actor-sprite{animation:idle-read 2.2s ease-in-out infinite!important}
+.room .storybook-actor.home-idle.resting .actor-sprite{animation:idle-sleep 3s ease-in-out infinite!important}
+.room .storybook-actor.home-idle.sitting .actor-sprite{animation:idle-sit 2.4s ease-in-out infinite!important}
+.room .storybook-actor.home-idle.practicing .actor-sprite{animation:idle-practice 1.5s ease-in-out infinite!important}
+.room .storybook-actor.home-idle.greeting .actor-sprite{animation:idle-celebrate 1.1s ease-in-out infinite!important}
+@keyframes home-arrive{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:none}}
+@keyframes idle-breathe{50%{transform:translateY(-4px) scale(1.012)}}
+@keyframes idle-eat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg) scale(1.015)}}
+@keyframes idle-read{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-1deg)}}
+@keyframes idle-sleep{50%{transform:scale(1.025,.985) translateY(2px)}}
+@keyframes idle-sit{50%{transform:translateY(-3px) rotate(1deg)}}
+@keyframes idle-practice{0%,100%{transform:rotate(-2deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+@keyframes idle-celebrate{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px) scale(1.035)}}
